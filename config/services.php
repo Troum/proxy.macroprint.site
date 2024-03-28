@@ -32,6 +32,7 @@ return [
     ],
     'strapi' => [
         'url' => env('STRAPI_URL', ''),
+        'image_url' => str_replace('/api', '', env('STRAPI_URL', '')),
         'token' => env('STRAPI_TOKEN', '')
     ]
 ];
