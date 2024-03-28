@@ -9,6 +9,7 @@ Route::group(['prefix' => 'sections'], function () {
     Route::get('footer', [SectionController::class, 'getFooter']);
 });
 Route::get('index', [PageController::class, 'indexPage']);
+Route::get('history', [PageController::class, 'companyHistory']);
 Route::get('requisites', [PageController::class, 'requisitesPage']);
 Route::get('articles', [PageController::class, 'companyArticles']);
 Route::get('requirements', [PageController::class, 'requirementsPage']);

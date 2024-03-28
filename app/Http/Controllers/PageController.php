@@ -74,6 +74,19 @@ class PageController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function companyHistory(): JsonResponse
+    {
+        try {
+            $page = Http::strapi()->get('/company-history?populate[seo][fields]=*');
+            return response()->json($page['data']['attributes']);
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
+        }
+    }
+
+    /**
      * @param string $slug
      * @return JsonResponse
      */
