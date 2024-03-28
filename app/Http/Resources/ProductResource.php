@@ -30,14 +30,14 @@ class ProductResource extends JsonResource
             'shortDescription' => $this->resource?->product['shortDescription'],
             'benefit' => $this->resource?->product['benefit'],
             'slug' => $this->resource?->product['slug'],
-            'image' => config('services.strapi.url') . $this->resource?->product['image']['data']['attributes']['url'],
-            'icon' => config('services.strapi.url') . $this->resource?->product['icon']['data']['attributes']['url'],
+            'image' => config('services.strapi.image_url') . $this->resource?->product['image']['data']['attributes']['url'],
+            'icon' => config('services.strapi.image_url') . $this->resource?->product['icon']['data']['attributes']['url'],
             'materials' => array_key_exists('materials', $this->resource?->product) ?
                 collect($this->resource?->product['materials']['data'])->map(function ($item) {
                     return [
                         'title' => $item['attributes']['title'],
                         'description' => $item['attributes']['description'],
-                        'image' => config('services.strapi.url') . $item['attributes']['image']['data']['attributes']['url'],
+                        'image' => config('services.strapi.image_url') . $item['attributes']['image']['data']['attributes']['url'],
                     ];
                 }) : [],
             'examples' => array_key_exists('examples', $this->resource?->product) ?
@@ -46,7 +46,7 @@ class ProductResource extends JsonResource
                         'title' => $item['attributes']['title'],
                         'description' => $item['attributes']['description'],
                         'material' => $item['attributes']['material'],
-                        'image' => config('services.strapi.url') . $item['attributes']['image']['data']['attributes']['url'],
+                        'image' => config('services.strapi.image_url') . $item['attributes']['image']['data']['attributes']['url'],
                     ];
                 }) : [],
             'others' => $this->when(property_exists($this->resource, 'others'), function () {
