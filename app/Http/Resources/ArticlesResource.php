@@ -22,7 +22,9 @@ class ArticlesResource extends JsonResource
         return [
             'title' => $this->resource['attributes']['title'],
             'description' => $this->resource['attributes']['description'],
-            'image' => $this->resource['attributes']['image']['data']['attributes']['url'],
+            'image' => [
+                'url' => $this->resource['attributes']['image']['data']['attributes']['url']
+            ],
             'date' => $this->resource['attributes']['createdAt'],
             'seo' => new SeoResource($this->resource['attributes']['seo']),
         ];
