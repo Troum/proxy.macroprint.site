@@ -28,7 +28,7 @@ class PageController extends Controller
         try {
 
             $index = Http::strapi()->get('/index?populate[0]=slider.slides');
-            $products = Http::strapi()->get('/products?populate[image][fields]=url&populate[icon][fields]=url&populate[materials][fields]=*&populate[examples][fields]=*');
+            $products = Http::strapi()->get('/products?sort[0]=createdAt:desc&populate[image][fields][0]=url&populate[icon][fields][0]=url');
             $articles = Http::strapi()->get('/articles?populate[seo][fields]=*&populate[image][fields]=url');
             $vacancies = Http::strapi()->get('/vacancies?populate=*');
 
@@ -36,10 +36,17 @@ class PageController extends Controller
                 collect($index['data']['attributes']['slider']['slides']['data'])->map(fn ($item) => ['image' => $item['attributes']['url']]) :
                 [];
 
+            $products = collect($products['data'])
+                ->map(function ($item) {
+                    $prod = new \stdClass();
+                    $prod->product = $item['attributes'];
+                    return $prod;
+                })->toArray();
+
             $result = [
                 'seo' => $index['data'],
                 'slides' => $slides,
-                'products' => $products['data'],
+                'products' => new ProductCollection($products),
                 'articles' => $articles['data'],
                 'vacancies' => $vacancies['data']
             ];
