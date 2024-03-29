@@ -103,21 +103,6 @@ class PageController extends Controller
     public function productPage(string $slug): JsonResponse
     {
         try {
-            $article = Http::strapi()->get('/products?filters[slug][$eq]='. $slug .'&populate[seo][fields]=*&populate[image][fields]=url');
-
-            return response()->json(new ArticlesResource($article));
-        } catch (Exception $exception) {
-            return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
-        }
-    }
-
-    /**
-     * @param string $slug
-     * @return JsonResponse
-     */
-    public function articlePage(string $slug): JsonResponse
-    {
-        try {
             $product = Http::strapi()->get('/products?filters[slug][$eq]='. $slug .'&populate[icon][fields][0]=url&populate[image][fields][0]=url&populate[seo][fields]=*&populate[materials][populate][image][fields][0]=url&populate[examples][populate][image][fields][0]=url');
             $products = Http::strapi()->get('/products?sort[0]=createdAt:desc&populate[image][fields][0]=url&populate[icon][fields][0]=url');
 
@@ -132,6 +117,20 @@ class PageController extends Controller
 
 
             return response()->json(new ProductResource($prod));
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
+        }
+    }
+
+    /**
+     * @param string $slug
+     * @return JsonResponse
+     */
+    public function articlePage(string $slug): JsonResponse
+    {
+        try {
+            $article = Http::strapi()->get('/articles?filters[slug][$eq]='. $slug .'&populate[seo][fields]=*&populate[image][fields]=url');
+            return response()->json(new ArticlesResource($article['data'][0]));
         } catch (Exception $exception) {
             return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
         }
