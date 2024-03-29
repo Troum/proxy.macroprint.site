@@ -130,7 +130,18 @@ class PageController extends Controller
     {
         try {
             $article = Http::strapi()->get('/articles?filters[slug][$eq]='. $slug .'&populate[seo][fields]=*&populate[image][fields]=url');
-            return response()->json(new ArticlesResource($article['data'][0]));
+            $articles = Http::strapi()->get('/articles?sort[0]=createdAt:desc&populate[image][fields][0]=url');
+
+            $others = collect($articles['data'])
+                ->filter(function ($item) use ($article) {
+                    return $this->retrieveData($article['data'], '0.id') !== $item['id'];
+                })->values()->map(fn ($item) => $item['attributes'])->toArray();
+
+            $prod = new \stdClass();
+            $prod->article = $article['data'][0]['attributes'];
+            $prod->others = $others;
+
+            return response()->json(new ArticlesResource($prod));
         } catch (Exception $exception) {
             return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Collections\ArticleCollection;
 use App\Http\Resources\Collections\FileCollection;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
@@ -20,13 +21,21 @@ class ArticlesResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'title' => $this->resource['attributes']['title'],
-            'description' => $this->resource['attributes']['description'],
+            'title' => $this->resource->article['title'],
+            'description' => $this->resource->article['description'],
             'image' => [
-                'url' => $this->resource['attributes']['image']['data']['attributes']['url']
+                'url' => $this->resource->article['image']['data']['attributes']['url']
             ],
-            'date' => $this->resource['attributes']['createdAt'],
-            'seo' => new SeoResource($this->resource['attributes']['seo']),
+            'date' => $this->resource->article['createdAt'],
+            'seo' => new SeoResource($this->resource->article['seo']),
+            'others' => $this->when(property_exists($this->resource, 'others'), function () {
+                $others = collect($this->resource->others)->map(function ($item) {
+                    $other = new \stdClass();
+                    $other->product = $item;
+                    return $other;
+                })->toArray();
+                return new ArticleCollection($others);
+            })
         ];
     }
 }
