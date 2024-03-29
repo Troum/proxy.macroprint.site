@@ -2,14 +2,15 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Collections\ArticleCollection;
 use App\Traits\HelperTrait;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
 {
     use HelperTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -19,11 +20,21 @@ class ArticleResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'title' => $this->retrieveData($this->resource, 'attributes.title'),
-            'slug' => $this->retrieveData($this->resource, 'attributes.slug'),
-            'description' => $this->retrieveData($this->resource, 'attributes.description'),
-            'image' => $this->retrieveData($this->resource,'attributes.image.data.attributes.url'),
-            'date' => Carbon::parse($this->retrieveData($this->resource, 'attributes.createdAt'))->format('d/m/Y')
+            'title' => $this->resource->article['title'],
+            'description' => $this->resource->article['description'],
+            'image' => [
+                'url' => $this->resource->article['image']['data']['attributes']['url']
+            ],
+            'date' => $this->resource->article['createdAt'],
+            'seo' => new SeoResource($this->resource->article['seo']),
+            'others' => $this->when(property_exists($this->resource, 'others'), function () {
+                $others = collect($this->resource->others)->map(function ($item) {
+                    $other = new \stdClass();
+                    $other->article = $item;
+                    return $other;
+                })->toArray();
+                return new ArticleCollection($others);
+            })
         ];
     }
 }
