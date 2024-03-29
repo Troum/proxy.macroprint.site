@@ -14,4 +14,4 @@ Route::get('requisites', [PageController::class, 'requisitesPage']);
 Route::get('articles', [PageController::class, 'companyArticles']);
 Route::get('requirements', [PageController::class, 'requirementsPage']);
 Route::get('products/{slug}', [PageController::class, 'productPage']);
-Route::get('articles/{slug}', [PageController::class, 'article']);
+Route::get('articles/{slug}', [PageController::class, 'articlePage']);

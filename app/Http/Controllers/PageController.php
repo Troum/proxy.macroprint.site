@@ -115,7 +115,7 @@ class PageController extends Controller
      * @param string $slug
      * @return JsonResponse
      */
-    public function article(string $slug): JsonResponse
+    public function articlePage(string $slug): JsonResponse
     {
         try {
             $product = Http::strapi()->get('/products?filters[slug][$eq]='. $slug .'&populate[icon][fields][0]=url&populate[image][fields][0]=url&populate[seo][fields]=*&populate[materials][populate][image][fields][0]=url&populate[examples][populate][image][fields][0]=url');
