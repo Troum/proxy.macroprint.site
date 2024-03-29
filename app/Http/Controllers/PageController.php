@@ -27,15 +27,18 @@ class PageController extends Controller
     {
         try {
 
-            $index = Http::strapi()->get('/index?populate=*');
+            $index = Http::strapi()->get('/index?populate[0]=slider.slides');
             $products = Http::strapi()->get('/products?populate[image][fields]=url&populate[icon][fields]=url&populate[materials][fields]=*&populate[examples][fields]=*');
             $articles = Http::strapi()->get('/articles?populate[seo][fields]=*&populate[image][fields]=url');
             $vacancies = Http::strapi()->get('/vacancies?populate=*');
 
+            $slides = array_key_exists('slider', $index['data']['attributes']) ?
+                collect($index['data']['attributes']['slider']['slides']['data'])->map(fn ($item) => ['image' => $item['attributes']['url']]) :
+                [];
 
             $result = [
                 'seo' => $index['data'],
-                'slides' => $index['data'],
+                'slides' => $slides,
                 'products' => $products['data'],
                 'articles' => $articles['data'],
                 'vacancies' => $vacancies['data']
