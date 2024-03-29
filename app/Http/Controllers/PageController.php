@@ -27,7 +27,7 @@ class PageController extends Controller
     {
         try {
 
-            $index = Http::strapi()->get('/index?populate[0]=slider.slides');
+            $index = Http::strapi()->get('/index?populate[0]=slider.slides&populate[1]=seo');
             $products = Http::strapi()->get('/products?sort[0]=createdAt:desc&populate[image][fields][0]=url&populate[icon][fields][0]=url');
             $articles = Http::strapi()->get('/articles?populate[seo][fields]=*&populate[image][fields]=url');
             $vacancies = Http::strapi()->get('/vacancies?populate=*');
@@ -44,11 +44,11 @@ class PageController extends Controller
                 })->toArray();
 
             $result = [
-                'seo' => $index['data'],
+                'seo' => new SeoResource($index['data']['attributes']['seo']),
                 'slides' => $slides,
                 'products' => new ProductCollection($products),
                 'articles' => new ArticleCollection($articles['data']),
-                'vacancies' => $vacancies['data']
+                'vacancies' => new VacancyCollection($vacancies['data'])
             ];
 
             return response()->json($result);
