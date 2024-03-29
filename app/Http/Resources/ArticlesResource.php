@@ -27,7 +27,7 @@ class ArticlesResource extends JsonResource
             ],
             'date' => $this->resource->article['createdAt'],
             'seo' => new SeoResource($this->resource->article['seo']),
-            'others' => $this->when(property_exists($this->resource->article, 'others'), function () {
+            'others' => $this->when(array_key_exists('others', $this->resource->article), function () {
                 $others = collect($this->resource->others)->map(function ($item) {
                     $other = new \stdClass();
                     $other->article = $item;
