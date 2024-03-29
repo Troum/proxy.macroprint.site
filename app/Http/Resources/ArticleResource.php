@@ -20,6 +20,7 @@ class ArticleResource extends JsonResource
     {
         return [
             'title' => $this->retrieveData($this->resource, 'attributes.title'),
+            'slug' => $this->retrieveData($this->resource, 'attributes.slug'),
             'description' => $this->retrieveData($this->resource, 'attributes.description'),
             'image' => $this->retrieveData($this->resource,'attributes.image.data.attributes.url'),
             'date' => Carbon::parse($this->retrieveData($this->resource, 'attributes.createdAt'))->format('d/m/Y')
