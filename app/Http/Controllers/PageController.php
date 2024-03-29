@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ArticleResource;
+use App\Http\Resources\ArticlesResource;
 use App\Http\Resources\Collections\ArticleCollection;
 use App\Http\Resources\Collections\ProductCollection;
 use App\Http\Resources\Collections\SlideCollection;
@@ -141,7 +141,7 @@ class PageController extends Controller
             $prod->article = $article['data'][0]['attributes'];
             $prod->others = $others;
 
-            return response()->json(new ArticleResource($prod));
+            return response()->json(new ArticlesResource($prod));
         } catch (Exception $exception) {
             return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
         }
@@ -158,7 +158,7 @@ class PageController extends Controller
 
             return response()->json([
                 'articles' => new ArticleCollection($articles['data']),
-                'page' => !is_null($page['data']) ? new ArticleResource($page['data']) : []
+                'page' => !is_null($page['data']) ? new ArticlesResource($page['data']) : []
             ]);
         } catch (Exception $exception) {
             return response()->json(['error' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
