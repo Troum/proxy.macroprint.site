@@ -47,7 +47,7 @@ class PageController extends Controller
                 'seo' => $index['data'],
                 'slides' => $slides,
                 'products' => new ProductCollection($products),
-                'articles' => $articles['data'],
+                'articles' => new ArticleCollection($articles['data']),
                 'vacancies' => $vacancies['data']
             ];
 
